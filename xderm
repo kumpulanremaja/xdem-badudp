@@ -1,5 +1,6 @@
 #!/bin/bash
 #xderm (Ryan Fauzi)
+#mod by wegare
 ####################################################################
 ##################### initializing script ##########################
 if [[ ! -e /usr/bin/assh/profile.txt ]]; then
