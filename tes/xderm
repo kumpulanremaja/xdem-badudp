@@ -680,6 +680,8 @@ iptables -t nat -A REDSOCKS -p tcp -j REDIRECT --to-ports 8889
 iptables -t nat -A OUTPUT -p tcp -j REDSOCKS
 iptables -t nat -A PREROUTING -p tcp -d 192.168.0.0/16 -j ACCEPT
 iptables -t nat -A PREROUTING -p tcp -j REDIRECT --to-ports 8889
+time=$(date|awk -F ' ' '{print $4}');echo -e " \e[36;1m($time)\e[0m \e[32;1mJalankan Reconnect SSH Otomatis? [y/N]\e[0m"
+time=$(date|awk -F ' ' '{print $4}');read -t 8 -n 1 -s -p " ($time) " y;echo -en "\b\b\b\b\b\b\b\b\b\b\b";
 route=$(route -n | grep -i 192 | head -n1 | awk '{print $2}')
 prip=$(cat /usr/bin/assh/akun.txt|awk "NR==4")
 udpgw=$(cat /usr/bin/assh/akun.txt|awk "NR==5")
@@ -690,9 +692,6 @@ route add 8.8.8.8 gw $route metric 4
 route add 8.8.4.4 gw $route metric 4
 route add $prip gw $route metric 4
 route add default gw 10.0.0.2 metric 6
-sleep 3
-time=$(date|awk -F ' ' '{print $4}');echo -e " \e[36;1m($time)\e[0m \e[32;1mJalankan Reconnect SSH Otomatis? [y/N]\e[0m"
-time=$(date|awk -F ' ' '{print $4}');read -t 8 -n 1 -s -p " ($time) " y;echo -en "\b\b\b\b\b\b\b\b\b\b\b";
 [[ ! -z $y ]] || { y=n; }
  if [ "$y" == "y" ]; then
 rm -rf /tmp/bot.sh
@@ -708,12 +707,12 @@ iface=\$(route|grep default | awk '{print \$8}')
 data1=\$(ifconfig \$iface|grep \"bytes\"|awk -F \".\" '{print \$2}'|awk -F \" \" '{print \$1}')
 resp=\$(curl -m 5 -s --write-out %{http_code} --output /dev/null --socks5-hostname 192.168.1.1:8888 http://ping.eu)
 route18=\$(route | grep 8.8.8.8 | head -n1 | awk '{print \$1}')
-	if [[ -z \$route18 ]]; then
-	    route del 8.8.8.8 gw \$route18 metric 4
-        route del 8.8.4.4 gw \$route18 metric 4
-        route del \$host gw \$route18 metric 4
-        ip link delete tun1 
-	fi
+if [[ -z \$route18 ]]; then
+route del 8.8.8.8 gw \$route18 metric 4
+route del 8.8.4.4 gw \$route18 metric 4
+route del \$host gw \$route18 metric 4
+ip link delete tun1
+fi
  if [ \$resp != \"301\" ]; then
 data2=\$(ifconfig \$iface|grep \"bytes\"|awk -F \".\" '{print \$2}'|awk -F \" \" '{print \$1}')
 if [ \$data1 == \$data2 ]; then
@@ -794,6 +793,7 @@ time=$(date|awk -F ' ' '{print $4}');echo -e "\e[36;1m($time)\e[0m \e[31;1mAuto 
 sed -i "/^# BEGIN AUTOBOOTING/,/^# END AUTOBOOTING/d" /etc/rc.local > /dev/null
 fi
 sleep 1;rm -rf /tmp/bot.txt $cdir/inject/screenlog.0
+sleep 4
 sed -i "/^# BEGIN AUTOBOOTING/,/^# END AUTOBOOTING/d" /etc/crontabs/root > /dev/null
 time=$(date|awk -F ' ' '{print $4}');echo -e " \e[36;1m($time)\e[0m \e[32;1mSelesai.\e[0m\n";exit
 }
