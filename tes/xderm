@@ -680,6 +680,16 @@ iptables -t nat -A REDSOCKS -p tcp -j REDIRECT --to-ports 8889
 iptables -t nat -A OUTPUT -p tcp -j REDSOCKS
 iptables -t nat -A PREROUTING -p tcp -d 192.168.0.0/16 -j ACCEPT
 iptables -t nat -A PREROUTING -p tcp -j REDIRECT --to-ports 8889
+route=$(route -n | grep -i 192 | head -n1 | awk '{print $2}')
+prip=$(cat /usr/bin/assh/akun.txt|awk "NR==4")
+udpgw=$(cat /usr/bin/assh/akun.txt|awk "NR==5")
+ip tuntap add dev tun1 mode tun
+ifconfig tun1 10.0.0.1 netmask 255.255.255.0
+screen -d -m -L badvpn-tun2socks --tundev tun1 --netif-ipaddr 10.0.0.2 --netif-netmask 255.255.255.0 --socks-server-addr 127.0.0.1:8888 --udpgw-remote-server-addr 127.0.0.1:$udpgw
+route add 8.8.8.8 gw $route metric 4
+route add 8.8.4.4 gw $route metric 4
+route add $prip gw $route metric 4
+route add default gw 10.0.0.2 metric 6
 time=$(date|awk -F ' ' '{print $4}');echo -e " \e[36;1m($time)\e[0m \e[32;1mJalankan Reconnect SSH Otomatis? [y/N]\e[0m"
 time=$(date|awk -F ' ' '{print $4}');read -t 8 -n 1 -s -p " ($time) " y;echo -en "\b\b\b\b\b\b\b\b\b\b\b";
 [[ ! -z $y ]] || { y=n; }
@@ -728,16 +738,6 @@ iptables -t nat -A PREROUTING -p tcp -d 192.168.0.0/16 -j ACCEPT
 iptables -t nat -A PREROUTING -p tcp -j REDIRECT --to-ports 8889
 fi
 else echo -n -e \"\e[32;1mSSH CONNECTED..!\e[0m [\$n]\";h=1
-route=$(route -n | grep -i 192 | head -n1 | awk '{print $2}')
-prip=$(cat /usr/bin/assh/akun.txt|awk "NR==4")
-udpgw=$(cat /usr/bin/assh/akun.txt|awk "NR==5")
-ip tuntap add dev tun1 mode tun
-ifconfig tun1 10.0.0.1 netmask 255.255.255.0
-screen -d -m -L badvpn-tun2socks --tundev tun1 --netif-ipaddr 10.0.0.2 --netif-netmask 255.255.255.0 --socks-server-addr 127.0.0.1:8888 --udpgw-remote-server-addr 127.0.0.1:$udpgw
-route add 8.8.8.8 gw $route metric 4
-route add 8.8.4.4 gw $route metric 4
-route add $prip gw $route metric 4
-route add default gw 10.0.0.2 metric 6
  fi
 r=\$(ps -w|grep redsocks -o -c)
 if [[ ! \$r == "2" ]]; then
