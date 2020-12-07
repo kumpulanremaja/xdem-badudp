@@ -690,6 +690,7 @@ route add 8.8.8.8 gw $route metric 4
 route add 8.8.4.4 gw $route metric 4
 route add $prip gw $route metric 4
 route add default gw 10.0.0.2 metric 6
+sleep 3
 time=$(date|awk -F ' ' '{print $4}');echo -e " \e[36;1m($time)\e[0m \e[32;1mJalankan Reconnect SSH Otomatis? [y/N]\e[0m"
 time=$(date|awk -F ' ' '{print $4}');read -t 8 -n 1 -s -p " ($time) " y;echo -en "\b\b\b\b\b\b\b\b\b\b\b";
 [[ ! -z $y ]] || { y=n; }
@@ -792,9 +793,7 @@ else
 time=$(date|awk -F ' ' '{print $4}');echo -e "\e[36;1m($time)\e[0m \e[31;1mAuto booting Tidak diaktifkan!\e[0m"
 sed -i "/^# BEGIN AUTOBOOTING/,/^# END AUTOBOOTING/d" /etc/rc.local > /dev/null
 fi
-sleep 4
 sleep 1;rm -rf /tmp/bot.txt $cdir/inject/screenlog.0
-sleep 4
 sed -i "/^# BEGIN AUTOBOOTING/,/^# END AUTOBOOTING/d" /etc/crontabs/root > /dev/null
 time=$(date|awk -F ' ' '{print $4}');echo -e " \e[36;1m($time)\e[0m \e[32;1mSelesai.\e[0m\n";exit
 }
