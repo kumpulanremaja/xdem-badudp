@@ -848,7 +848,7 @@ time=$(date|awk -F ' ' '{print $4}');echo -e " \e[36;1m($time)\e[0m \e[32;1mIngi
 time=$(date|awk -F ' ' '{print $4}');read -t 10 -n 1 -s -p " ($time) " y;echo -en "\b\b\b\b\b\b\b\b\b\b\b\b"
 route=$(route -n | grep -i 192 | head -n1 | awk '{print $2}')
 prip=$(cat /usr/bin/assh/akun.txt|awk "NR==4")
-[[ $y == "y" ]] && { killall -q socks1 socks2 badvpn-tun2socks;route del 8.8.8.8 gw $route metric 4;route del 8.8.4.4 gw $route metric 4;route del $prip gw $route metric 4;ip link delete tun1;time=$(date|awk -F ' ' '{print $4}');echo -e " \e[36;1m($time)\e[0m \e[32;1mInject dihentikan!\e[0m"; } || { time=$(date|awk -F ' ' '{print $4}');echo -e " \e[36;1m($time)\e[0m \e[31;1mInject Tetap Berjalan!\e[0m"; }
+[[ $y == "y" ]] && { killall -q socks1 socks2 badvpn-tun2socks > /dev/null;route del 8.8.8.8 gw $route metric 4 > /dev/null;route del 8.8.4.4 gw $route metric 4 > /dev/null;route del $prip gw $route metric 4 > /dev/null;ip link delete tun1 > /dev/null;time=$(date|awk -F ' ' '{print $4}');echo -e " \e[36;1m($time)\e[0m \e[32;1mInject dihentikan!\e[0m"; } || { time=$(date|awk -F ' ' '{print $4}');echo -e " \e[36;1m($time)\e[0m \e[31;1mInject Tetap Berjalan!\e[0m"; }
  fi
  
  
