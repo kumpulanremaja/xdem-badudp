@@ -767,6 +767,7 @@ time=$(date|awk -F ' ' '{print $4}');echo -e "\e[36;1m($time)\e[0m \e[34;1mAuto 
 else
 time=$(date|awk -F ' ' '{print $4}');echo -e "\e[36;1m($time)\e[0m \e[31;1mAuto reconnect Tidak diaktifkan!\e[0m"
  fi 
+sleep 4
  time=$(date|awk -F ' ' '{print $4}');echo -e " \e[36;1m($time)\e[0m \e[32;1mJalankan Auto Booting Otomatis? [y/N]\e[0m"
 time=$(date|awk -F ' ' '{print $4}');read -t 8 -n 1 -s -p " ($time) " y;echo -en "\b\b\b\b\b\b\b\b\b\b\b";
 [[ ! -z $y ]] || { y=n; }
