@@ -837,7 +837,7 @@ token=$(echo "$data" | grep "TokInfo" | cut -b 10-41)
 ipp=$(curl -s http://192.168.2.1/api/monitoring/status -H "Host: 192.168.2.1" -H "Connection: keep-alive" -H "Accept: */*" -H "X-Requested-With: XMLHttpRequest" -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.119 Safari/537.36" -H "Referer: http://192.168.2.1/html/home.html" -H "Accept-Encoding: gzib, deflate" -H "Accept-Language: id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7" -H "Cookie: $sesi" | grep 'WanIPAddress' | awk -F">" '{print $2}' | awk -F"<" '{print $1}')
 time=$(date|awk -F ' ' '{print $4}');echo -e " \e[36;1m($time)\e[0m \e[32;1mIP Address saat ini \e[0m\e[33;1m$ipp\e[0m"
 elif [[ ! "$ips" == "192.168.2" ]]; then
-ipa=$(ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | grep -v '192.168.1.1' | cut -d: -f2 | awk '{ print $1}')
+ipa=$(ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | grep -v '192.168.1.1' | cut -d: -f2 | awk '{ print $1}' | head -n1)
 time=$(date|awk -F ' ' '{print $4}');echo -e " \e[36;1m($time)\e[0m \e[32;1mIP Address saat ini \e[0m\e[33;1m$ipa\e[0m"
 fi
 
