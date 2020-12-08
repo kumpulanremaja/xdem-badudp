@@ -779,7 +779,7 @@ echo "#!/bin/bash
 #wegare
 cat <<EOF>> /etc/crontabs/root
 # BEGIN AUTOBOOTING
-*/2 * * * *  (printf 'y'; sleep 2; printf 'n'; sleep 2;) | xderm start
+*/2 * * * *  (printf 'y'; sleep 2; printf 'n'; sleep 2;) | xderm stop && (printf 'y'; sleep 2; printf 'n'; sleep 2;) | xderm start
 # END AUTOBOOTING
 EOF" > /usr/bin/autobooting-xderm
 chmod +x /usr/bin/autobooting-xderm
