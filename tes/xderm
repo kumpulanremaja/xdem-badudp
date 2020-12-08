@@ -687,7 +687,7 @@ prip=$(cat /usr/bin/assh/akun.txt|awk "NR==4")
 udpgw=$(cat /usr/bin/assh/akun.txt|awk "NR==5")
 ip tuntap add dev tun1 mode tun
 ifconfig tun1 10.0.0.1 netmask 255.255.255.0
-screen -d -m -L badvpn-tun2socks --tundev tun1 --netif-ipaddr 10.0.0.2 --netif-netmask 255.255.255.0 --socks-server-addr 127.0.0.1:8888 --udpgw-remote-server-addr 127.0.0.1:$udpgw --udpgw-connection-buffer-size 1024 --client-socket-sndbuf 100000
+screen -d -m -L badvpn-tun2socks --tundev tun1 --netif-ipaddr 10.0.0.2 --netif-netmask 255.255.255.0 --socks-server-addr 127.0.0.1:8888 --udpgw-remote-server-addr 127.0.0.1:$udpgw --udpgw-connection-buffer-size 1024
 route add 8.8.8.8 gw $route metric 4
 route add 8.8.4.4 gw $route metric 4
 route add $prip gw $route metric 4
@@ -754,7 +754,7 @@ fi
 sleep 3
 ip tuntap add dev tun1 mode tun
 ifconfig tun1 10.0.0.1 netmask 255.255.255.0
-screen -d -m -L badvpn-tun2socks --tundev tun1 --netif-ipaddr 10.0.0.2 --netif-netmask 255.255.255.0 --socks-server-addr 127.0.0.1:8888 --udpgw-remote-server-addr 127.0.0.1:$udpgw --udpgw-connection-buffer-size 1024 --client-socket-sndbuf 100000
+screen -d -m -L badvpn-tun2socks --tundev tun1 --netif-ipaddr 10.0.0.2 --netif-netmask 255.255.255.0 --socks-server-addr 127.0.0.1:8888 --udpgw-remote-server-addr 127.0.0.1:$udpgw --udpgw-connection-buffer-size 1024
 route add 8.8.8.8 gw $route metric 4
 route add 8.8.4.4 gw $route metric 4
 route add $prip gw $route metric 4
