@@ -332,7 +332,7 @@ class thread(Thread):
         target_url  = 'http://141.0.11.241'
         interval    = 2
         timeout     = 3
-        socks4      = 'socks4://127.0.0.1:'+str(target_port)
+        socks5      = 'socks5://127.0.0.1:'+str(target_port)
 
     def https(self, server_name_indicate = '$sni'):
         try:
@@ -654,7 +654,7 @@ mv -fn /etc/init.d/dnsmasq1 /etc/init.d/dnsmasq
 killall -q redsocks;echo "base { log_debug = off;log_info = on;log = \"syslog:local7\";
 daemon = on;redirector = iptables; }
 redsocks { local_ip = 0.0.0.0;local_port = 8889;
-ip = 0.0.0.0;port = 8888;type = socks4; }
+ip = 0.0.0.0;port = 8888;type = socks5; }
 redudp { local_ip = 0.0.0.0;
 local_port = 10053;ip = 0.0.0.0;port = 8889;
 udp_timeout = 30; }
@@ -705,7 +705,7 @@ user=\$(cat \$cdir/assh/akun.txt|awk \"NR==1\");pass=\$(cat \$cdir/assh/akun.txt
 host=\$(cat \$cdir/assh/akun.txt|awk \"NR==4\");port=\$(cat \$cdir/assh/akun.txt|awk \"NR==3\");sleep 1
 iface=\$(route|grep default | awk '{print \$8}')
 data1=\$(ifconfig \$iface|grep \"bytes\"|awk -F \".\" '{print \$2}'|awk -F \" \" '{print \$1}')
-resp=\$(curl -m 5 -s --write-out %{http_code} --output /dev/null --socks4-hostname 192.168.1.1:8888 http://ping.eu)
+resp=\$(curl -m 5 -s --write-out %{http_code} --output /dev/null --socks5-hostname 192.168.1.1:8888 http://ping.eu)
 route18=\$(route | grep 8.8.8.8 | head -n1 | awk '{print \$1}')
 if [[ -z \$route18 ]]; then
 route del 8.8.8.8 gw \$route18 metric 4
