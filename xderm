@@ -775,9 +775,9 @@ time=$(date|awk -F ' ' '{print $4}');read -t 8 -n 1 -s -p " ($time) " y;echo -en
  if [ "$y" == "y" ]; then
 rm -rf /tmp/bot.sh
 ############################################ MEMBUAT FILE AUTO BOOTING ###############################################
-echo "#!/bin/bash
+echo '#!/bin/bash
 #wegare
-sed -i "/^# BEGIN AUTOBOOTING/,/^# END AUTOBOOTING/d" /etc/rc.local > /dev/null" > /usr/bin/autobooting-xderm-del
+sed -i "/^# BEGIN AUTOBOOTING/,/^# END AUTOBOOTING/d" /etc/rc.local > /dev/null' > /usr/bin/autobooting-xderm-del
 chmod +x /usr/bin/autobooting-xderm-del
 echo "#!/bin/bash
 #wegare
