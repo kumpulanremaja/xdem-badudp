@@ -688,8 +688,6 @@ udpgw=$(cat /usr/bin/assh/akun.txt|awk "NR==5")
 ip tuntap add dev tun1 mode tun
 ifconfig tun1 10.0.0.1 netmask 255.255.255.0
 screen -d -m -L badvpn-tun2socks --tundev tun1 --netif-ipaddr 10.0.0.2 --netif-netmask 255.255.255.0 --socks-server-addr 127.0.0.1:8888 --udpgw-remote-server-addr 127.0.0.1:$udpgw
-route add 8.8.8.8 gw $route metric 4
-route add 8.8.4.4 gw $route metric 4
 route add $prip gw $route metric 4
 route add default gw 10.0.0.2 metric 6
 [[ ! -z $y ]] || { y=n; }
@@ -708,8 +706,6 @@ data1=\$(ifconfig \$iface|grep \"bytes\"|awk -F \".\" '{print \$2}'|awk -F \" \"
 resp=\$(curl -m 5 -s --write-out %{http_code} --output /dev/null --socks5-hostname 192.168.1.1:8888 http://ping.eu)
 route18=\$(route | grep 8.8.8.8 | head -n1 | awk '{print \$1}')
 if [[ -z \$route18 ]]; then
-route del 8.8.8.8 gw \$route18 metric 4
-route del 8.8.4.4 gw \$route18 metric 4
 route del \$host gw \$route18 metric 4
 ip link delete tun1
 fi
@@ -755,8 +751,6 @@ sleep 3
 ip tuntap add dev tun1 mode tun
 ifconfig tun1 10.0.0.1 netmask 255.255.255.0
 screen -d -m -L badvpn-tun2socks --tundev tun1 --netif-ipaddr 10.0.0.2 --netif-netmask 255.255.255.0 --socks-server-addr 127.0.0.1:8888 --udpgw-remote-server-addr 127.0.0.1:$udpgw
-route add 8.8.8.8 gw $route metric 4
-route add 8.8.4.4 gw $route metric 4
 route add $prip gw $route metric 4
 route add default gw 10.0.0.2 metric 6
 let n=\$n+1;echo -en \"\\b\\b\\b\\b\\b\\b\\b\\b\\b\\b\\b\\b\\b\\b\\b\\b\\b\\b\\b\\b\\b\\b\\b\\b\\b\\b\\b\\b\\b\\b\\b\\b\\b\\b\"
@@ -867,7 +861,7 @@ time=$(date|awk -F ' ' '{print $4}');echo -e " \e[36;1m($time)\e[0m \e[32;1mIngi
 time=$(date|awk -F ' ' '{print $4}');read -t 10 -n 1 -s -p " ($time) " y;echo -en "\b\b\b\b\b\b\b\b\b\b\b\b"
 route=$(route -n | grep -i 192 | head -n1 | awk '{print $2}')
 prip=$(cat /usr/bin/assh/akun.txt|awk "NR==4")
-[[ $y == "y" ]] && { killall -q socks1 socks2 badvpn-tun2socks > /dev/null;route del 8.8.8.8 gw $route metric 4 > /dev/null;route del 8.8.4.4 gw $route metric 4 > /dev/null;route del $prip gw $route metric 4 > /dev/null;ip link delete tun1 > /dev/null;time=$(date|awk -F ' ' '{print $4}');echo -e " \e[36;1m($time)\e[0m \e[32;1mInject dihentikan!\e[0m"; } || { time=$(date|awk -F ' ' '{print $4}');echo -e " \e[36;1m($time)\e[0m \e[31;1mInject Tetap Berjalan!\e[0m"; }
+[[ $y == "y" ]] && { killall -q socks1 socks2 badvpn-tun2socks > /dev/null;route del $prip gw $route metric 4 > /dev/null;ip link delete tun1 > /dev/null;time=$(date|awk -F ' ' '{print $4}');echo -e " \e[36;1m($time)\e[0m \e[32;1mInject dihentikan!\e[0m"; } || { time=$(date|awk -F ' ' '{print $4}');echo -e " \e[36;1m($time)\e[0m \e[31;1mInject Tetap Berjalan!\e[0m"; }
  fi
  
  
