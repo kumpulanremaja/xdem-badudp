@@ -775,15 +775,11 @@ time=$(date|awk -F ' ' '{print $4}');read -t 8 -n 1 -s -p " ($time) " y;echo -en
  if [ "$y" == "y" ]; then
 rm -rf /tmp/bot.sh
 ############################################ MEMBUAT FILE AUTO BOOTING ###############################################
-echo '#!/bin/bash
-#wegare
-sed -i "/^# BEGIN AUTOBOOTING/,/^# END AUTOBOOTING/d" /etc/rc.local > /dev/null' > /usr/bin/autobooting-xderm-del
-chmod +x /usr/bin/autobooting-xderm-del
 echo "#!/bin/bash
 #wegare
 cat <<EOF>> /etc/crontabs/root
 # BEGIN AUTOBOOTING
-*/2 * * * *  autobooting-xderm-del && (printf 'n'; sleep 2;) | xderm stop && (printf 'y'; sleep 2; printf 'y'; sleep 2;) | xderm start
+*/2 * * * *  (printf 'n'; sleep 2;) | xderm stop && (printf 'y'; sleep 2; printf 'y'; sleep 2;) | xderm start
 # END AUTOBOOTING
 EOF" > /usr/bin/autobooting-xderm
 chmod +x /usr/bin/autobooting-xderm
@@ -862,15 +858,21 @@ fi
 
 
 in=$(ps | grep socks)
- if [[ $in = *"socks1"* ]] || [[ $in = *"socks2"* ]]; then
-time=$(date|awk -F ' ' '{print $4}');echo -e " \e[36;1m($time)\e[0m \e[32;1mIngin Hentikan Proses Inject? [y/N]\e[0m"
-time=$(date|awk -F ' ' '{print $4}');read -t 10 -n 1 -s -p " ($time) " y;echo -en "\b\b\b\b\b\b\b\b\b\b\b\b"
+ ##if [[ $in = *"socks1"* ]] || [[ $in = *"socks2"* ]]; then
+##time=$(date|awk -F ' ' '{print $4}');echo -e " \e[36;1m($time)\e[0m \e[32;1mIngin Hentikan Proses Inject? [y/N]\e[0m"
+##time=$(date|awk -F ' ' '{print $4}');read -t 10 -n 1 -s -p " ($time) " y;echo -en "\b\b\b\b\b\b\b\b\b\b\b\b"
 route=$(route -n | grep -i 192 | head -n1 | awk '{print $2}')
 prip=$(cat /usr/bin/assh/akun.txt|awk "NR==4")
-[[ $y == "y" ]] && { killall -q socks1 socks2 badvpn-tun2socks > /dev/null;route del 8.8.8.8 gw $route metric 4 > /dev/null;route del 8.8.4.4 gw $route metric 4 > /dev/null;route del $prip gw $route metric 4 > /dev/null;ip link delete tun1 > /dev/null;time=$(date|awk -F ' ' '{print $4}');echo -e " \e[36;1m($time)\e[0m \e[32;1mInject dihentikan!\e[0m"; } || { time=$(date|awk -F ' ' '{print $4}');echo -e " \e[36;1m($time)\e[0m \e[31;1mInject Tetap Berjalan!\e[0m"; }
- fi
- 
- 
+###[[ $y == "y" ]] && { killall -q socks1 socks2 badvpn-tun2socks > /dev/null;route del 8.8.8.8 gw $route metric 4 > /dev/null;route del 8.8.4.4 gw $route metric 4 > /dev/null;route del $prip gw $route metric 4 > /dev/null;ip link delete tun1 > /dev/null;time=$(date|awk -F ' ' '{print $4}');echo -e " \e[36;1m($time)\e[0m \e[32;1mInject dihentikan!\e[0m"; } || { time=$(date|awk -F ' ' '{print $4}');echo -e " \e[36;1m($time)\e[0m \e[31;1mInject Tetap Berjalan!\e[0m"; }
+## fi
+killall socks1 
+killall socks2 
+killall badvpn-tun2socks > /dev/null
+route del 8.8.8.8 gw $route metric 4 > /dev/null
+route del 8.8.4.4 gw $route metric 4 > /dev/null
+route del $prip gw $route metric 4 > /dev/null
+ip link delete tun1 > /dev/null
+sed -i "/^# BEGIN AUTOBOOTING/,/^# END AUTOBOOTING/d" /etc/rc.local > /dev/null
  
 time=$(date|awk -F ' ' '{print $4}');echo -e " \e[36;1m($time)\e[0m \e[32;1mIngin Reconnect Modem juga? [y/N]\e[0m"
 time=$(date|awk -F ' ' '{print $4}');read -t 10 -n 1 -s -p " ($time) " ym;echo -en "\b\b\b\b\b\b\b\b\b\b\b\b"
