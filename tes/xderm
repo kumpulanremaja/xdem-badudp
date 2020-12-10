@@ -737,7 +737,6 @@ elif [ \$modes -eq 1 ]; then
 screen -d -m sshpass -p \$pass ssh -oStrictHostKeyChecking=no -CND :8888 -p \$port \$user@\$host -o \"Proxycommand=ncat --proxy-type http --proxy 127.0.0.1:3339 %h %p\"
 fi
 sleep 4
-prip=$(cat /usr/bin/assh/akun.txt|awk "NR==4")
 iptables -t nat -D PREROUTING -p tcp -j REDSOCKS_FILTER 2>/dev/null
 iptables -t nat -D OUTPUT -p tcp -j REDSOCKS_FILTER 2>/dev/null
 iptables -t nat -F REDSOCKS_FILTER 2>/dev/null
@@ -755,7 +754,7 @@ iptables -t nat -A REDSOCKS_FILTER -d 172.16.0.0/12 -j RETURN
 iptables -t nat -A REDSOCKS_FILTER -d 192.168.0.0/16 -j RETURN
 iptables -t nat -A REDSOCKS_FILTER -d 224.0.0.0/4 -j RETURN
 iptables -t nat -A REDSOCKS_FILTER -d 240.0.0.0/4 -j RETURN
-iptables -t nat -A REDSOCKS_FILTER -d $prip -j RETURN 
+iptables -t nat -A REDSOCKS_FILTER -d \$host -j RETURN 
 iptables -t nat -A REDSOCKS_FILTER -j REDSOCKS
 iptables -t nat -A REDSOCKS -p tcp -j REDIRECT --to-port 8889
 iptables -t nat -A OUTPUT -p tcp -j REDSOCKS_FILTER
