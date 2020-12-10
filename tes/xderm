@@ -637,8 +637,6 @@ outp=$(iptables -w -t nat -L OUTPUT --line-number -n|grep REDSOCKS|awk -F " " '{
 lines=$(iptables -w -t nat -L PREROUTING --line-number -n|grep tcp|awk "NR==1"|awk -F " " '{print $1}')
 [[ -z $lines ]] || { iptables -w -t nat -D PREROUTING $lines;continue; } && { break; }
  done
-reds=$(iptables -w -t nat -L -n|grep REDSOCKS|awk -F " " '{print $1}')
-[[ -z $reds ]] || { iptables -w -t nat -F REDSOCKS;iptables -w -t nat -X REDSOCKS; }
 time=$(date|awk -F ' ' '{print $4}');echo -e " \e[36;1m($time)\e[0m \e[31;1mBerhenti.\e[0m"
 rm -rf /tmp/sshlog.txt;exit
 fi
@@ -667,9 +665,7 @@ outp=$(iptables -w -t nat -L OUTPUT --line-number -n|grep REDSOCKS|awk -F " " '{
 lines=$(iptables -w -t nat -L PREROUTING --line-number -n|grep tcp|awk "NR==1"|awk -F " " '{print $1}')
 [[ -z $lines ]] || { iptables -w -t nat -D PREROUTING $lines;continue; } && { break; }
  done
-reds=$(iptables -w -t nat -L -n|grep REDSOCKS|awk -F " " '{print $1}')
 prip=$(cat /usr/bin/assh/akun.txt|awk "NR==4")
-[[ -z $reds ]] || { iptables -w -t nat -F REDSOCKS;iptables -w -t nat -X REDSOCKS; }
 iptables -t nat -D PREROUTING -p tcp -j REDSOCKS_FILTER 2>/dev/null
 iptables -t nat -D OUTPUT -p tcp -j REDSOCKS_FILTER 2>/dev/null
 iptables -t nat -F REDSOCKS_FILTER 2>/dev/null
@@ -733,8 +729,6 @@ outp=\$(iptables -w -t nat -L OUTPUT --line-number -n|grep REDSOCKS|awk -F \" \"
 lines=\$(iptables -w -t nat -L PREROUTING --line-number -n|grep tcp|awk \"NR==1\"|awk -F \" \" '{print \$1}')
 [[ -z \$lines ]] || { iptables -w -t nat -D PREROUTING \$lines;continue; } && { break; }
  done
-reds=\$(iptables -w -t nat -L -n|grep REDSOCKS|awk -F \" \" '{print \$1}')
-[[ -z \$reds ]] || { iptables -w -t nat -F REDSOCKS;iptables -w -t nat -X REDSOCKS; }
 killall -q sshpass redsocks;echo -n -e \"\e[31;1mSSH DISSCONNECT!\e[0m [\$n]\";let h=\$h+1
 modes=\$(cat \$cdir/assh/profile.txt|awk \"NR==1\"|awk -F \"'\" '{print \$2}')
 if [ \$modes -eq 2 ]; then
@@ -743,6 +737,7 @@ elif [ \$modes -eq 1 ]; then
 screen -d -m sshpass -p \$pass ssh -oStrictHostKeyChecking=no -CND :8888 -p \$port \$user@\$host -o \"Proxycommand=ncat --proxy-type http --proxy 127.0.0.1:3339 %h %p\"
 fi
 sleep 4
+prip=$(cat /usr/bin/assh/akun.txt|awk "NR==4")
 iptables -t nat -D PREROUTING -p tcp -j REDSOCKS_FILTER 2>/dev/null
 iptables -t nat -D OUTPUT -p tcp -j REDSOCKS_FILTER 2>/dev/null
 iptables -t nat -F REDSOCKS_FILTER 2>/dev/null
@@ -854,15 +849,13 @@ echo -e " \e[32;1m##\e[0m               \e[35;1mXDERM SSH Auto Stopper\e[0m     
 echo -e " \e[32;1m#######################################################\e[0m"
 dns1=$(cat /tmp/resolv.conf.auto|grep name|awk "NR==1"|awk -F " " '{print $2}')
 dns2=$(cat /tmp/resolv.conf.auto|grep name|awk "NR==2"|awk -F " " '{print $2}')
-killall -q redsocks dnsmasq sshpass bot.sh;/etc/init.d/dnsmasq start > /dev/null 2>&1
+killall -q redsocks dnsmasq sshpass bot.sh screen;/etc/init.d/dnsmasq start > /dev/null 2>&1
 outp=$(iptables -w -t nat -L OUTPUT --line-number -n|grep REDSOCKS|awk -F " " '{print $1}')
 [[ -z $outp ]] || { iptables -w -t nat -F OUTPUT; }
  while true; do
 lines=$(iptables -w -t nat -L PREROUTING --line-number -n|grep tcp|awk "NR==1"|awk -F " " '{print $1}')
 [[ -z $lines ]] || { iptables -w -t nat -D PREROUTING $lines;continue; } && { break; }
  done
-reds=$(iptables -w -t nat -L -n|grep REDSOCKS|awk -F " " '{print $1}')
-[[ -z $reds ]] || { iptables -w -t nat -F REDSOCKS;iptables -w -t nat -X REDSOCKS; }
 
 
 
