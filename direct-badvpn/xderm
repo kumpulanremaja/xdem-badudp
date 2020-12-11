@@ -602,12 +602,11 @@ screen -d -m sshpass -p $pass ssh -oStrictHostKeyChecking=no -CND :8888 -p 443 $
 else
 screen -d -m sshpass -p $pass ssh -oStrictHostKeyChecking=no -CND :8888 -p $port $user@$host -o "Proxycommand=ncat --proxy-type http --proxy 127.0.0.1:3339 %h %p"
 fi
-n=1
-ulang=1
+n=1;ulang=1
    while [ $ulang -eq 1 ]; do
 time=$(date|awk -F ' ' '{print $4}');echo -n -e " \e[36;1m($time)\e[0m \e[32;1mMenjalankan SSH...\e[0m \e[33;1m($n)\e[0m"
 rm -rf /tmp/sshlog.txt;curl -s --trace /tmp/sshlog.txt 192.168.1.1:8888 > /dev/null
-log=$(grep Info /tmp/sshlog.txt|awk -F':' '{print $2}'|awk -F' ' '{print $1}');pus="$(echo $n | wc -c)"
+log=$(grep Info /tmp/sshlog.txt|awk -F':' '{print $2}'|awk -F' ' '{print $1}');pus=$(echo $n|wc -c)
  if [ $pus -eq 2 ]; then
 echo -en "\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b"
  fi
