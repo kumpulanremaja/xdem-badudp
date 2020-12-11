@@ -630,66 +630,14 @@ else
 screen -d -m sshpass -p $pass ssh -oStrictHostKeyChecking=no -CND :8888 -p $port $user@$host -o "Proxycommand=ncat --proxy-type http --proxy 127.0.0.1:3339 %h %p"
 fi
 else
-killall -q redsocks sshpass dnsmasq;/etc/init.d/dnsmasq start > /dev/null
-outp=$(iptables -w -t nat -L OUTPUT --line-number -n|grep REDSOCKS|awk -F " " '{print $1}')
-[[ -z $outp ]] || { iptables -w -t nat -F OUTPUT; }
- while true; do
-lines=$(iptables -w -t nat -L PREROUTING --line-number -n|grep tcp|awk "NR==1"|awk -F " " '{print $1}')
-[[ -z $lines ]] || { iptables -w -t nat -D PREROUTING $lines;continue; } && { break; }
- done
+killall -q sshpass dnsmasq;/etc/init.d/dnsmasq start > /dev/null
 time=$(date|awk -F ' ' '{print $4}');echo -e " \e[36;1m($time)\e[0m \e[31;1mBerhenti.\e[0m"
 rm -rf /tmp/sshlog.txt;exit
 fi
   fi
-sleep 1;let n=$n+1
- done
-rm -rf /tmp/sshlog.txt;time=$(date|awk -F ' ' '{print $4}');echo -e " \e[36;1m($time)\e[0m \e[32;1mMenjalankan Redsocks & DNS...\e[0m"
-killall -q dnsmasq;sed -i "s/port=53/port=54/g" /var/etc/dnsmasq.con*
-killall -q dnsmasq;mv -fn /etc/init.d/dnsmasq /etc/init.d/dnsmasq1
-killall -q dnsmasq;dnsmasq -C /var/etc/dnsmasq.con* -x /var/run/dnsmasq/dnsmasq.pid
-mv -fn /etc/init.d/dnsmasq1 /etc/init.d/dnsmasq
-###########################################################################################
-killall -q redsocks;echo "base { log_debug = off;log_info = on;log = \"syslog:local7\";
-daemon = on;redirector = iptables; }
-redsocks { local_ip = 0.0.0.0;local_port = 8889;
-ip = 0.0.0.0;port = 8888;type = socks4; }
-redudp { local_ip = 0.0.0.0;
-local_port = 10053;ip = 0.0.0.0;port = 8889;
-udp_timeout = 30; }
-dnstc { local_ip = 0.0.0.0;local_port = 5300; }" > /etc/redsocks.conf;killall -q redsocks;redsocks
-###########################################################################################
-time=$(date|awk -F ' ' '{print $4}');echo -e " \e[36;1m($time)\e[0m \e[32;1mRouting IPtables Redsocks...\e[0m"
-outp=$(iptables -w -t nat -L OUTPUT --line-number -n|grep REDSOCKS|awk -F " " '{print $1}')
-[[ -z $outp ]] || { iptables -w -t nat -F OUTPUT; }
- while true; do
-lines=$(iptables -w -t nat -L PREROUTING --line-number -n|grep tcp|awk "NR==1"|awk -F " " '{print $1}')
-[[ -z $lines ]] || { iptables -w -t nat -D PREROUTING $lines;continue; } && { break; }
+sleep 1;
  done
 prip=$(cat /usr/bin/assh/akun.txt|awk "NR==4")
-iptables -t nat -D PREROUTING -p tcp -j REDSOCKS_FILTER 2>/dev/null
-iptables -t nat -D OUTPUT -p tcp -j REDSOCKS_FILTER 2>/dev/null
-iptables -t nat -F REDSOCKS_FILTER 2>/dev/null
-iptables -t nat -X REDSOCKS_FILTER 2>/dev/null
-iptables -t nat -F REDSOCKS 2>/dev/null
-iptables -t nat -X REDSOCKS 2>/dev/null
-iptables -t nat -N REDSOCKS
-iptables -t nat -N REDSOCKS_FILTER
-iptables -t nat -I REDSOCKS_FILTER -o lo -j RETURN
-iptables -t nat -A REDSOCKS_FILTER -d 0.0.0.0/8 -j RETURN
-iptables -t nat -A REDSOCKS_FILTER -d 10.0.0.0/8 -j RETURN
-iptables -t nat -A REDSOCKS_FILTER -d 127.0.0.0/8 -j RETURN
-iptables -t nat -A REDSOCKS_FILTER -d 169.254.0.0/16 -j RETURN
-iptables -t nat -A REDSOCKS_FILTER -d 172.16.0.0/12 -j RETURN
-iptables -t nat -A REDSOCKS_FILTER -d 192.168.0.0/16 -j RETURN
-iptables -t nat -A REDSOCKS_FILTER -d 224.0.0.0/4 -j RETURN
-iptables -t nat -A REDSOCKS_FILTER -d 240.0.0.0/4 -j RETURN
-iptables -t nat -A REDSOCKS_FILTER -d $prip -j RETURN 
-iptables -t nat -A REDSOCKS_FILTER -j REDSOCKS
-iptables -t nat -A REDSOCKS -p tcp -j REDIRECT --to-port 8889
-iptables -t nat -A OUTPUT -p tcp -j REDSOCKS_FILTER
-iptables -t nat -A PREROUTING -p tcp -j REDSOCKS_FILTER
-time=$(date|awk -F ' ' '{print $4}');echo -e " \e[36;1m($time)\e[0m \e[32;1mJalankan Reconnect SSH Otomatis? [y/N]\e[0m"
-time=$(date|awk -F ' ' '{print $4}');read -t 8 -n 1 -s -p " ($time) " y;echo -en "\b\b\b\b\b\b\b\b\b\b\b";
 route=$(route -n | grep -i 192 | head -n1 | awk '{print $2}')
 udpgw=$(cat /usr/bin/assh/akun.txt|awk "NR==5")
 ip tuntap add dev tun1 mode tun
@@ -699,90 +647,6 @@ route add 8.8.8.8 gw $route metric 4
 route add 8.8.4.4 gw $route metric 4
 route add $prip gw $route metric 4
 route add default gw 10.0.0.2 metric 6
-[[ ! -z $y ]] || { y=n; }
- if [ "$y" == "y" ]; then
-rm -rf /tmp/bot.sh
-############################################ MEMBUAT FILE AUTO REKONEK ###############################################
-echo "#!/bin/bash
-#bot
-clear;n=1;h=0
- while true; do
-cdir=/usr/bin
-user=\$(cat \$cdir/assh/akun.txt|awk \"NR==1\");pass=\$(cat \$cdir/assh/akun.txt|awk \"NR==2\")
-host=\$(cat \$cdir/assh/akun.txt|awk \"NR==4\");port=\$(cat \$cdir/assh/akun.txt|awk \"NR==3\");sleep 1
-iface=\$(route|grep default | awk '{print \$8}')
-data1=\$(ifconfig \$iface|grep \"bytes\"|awk -F \".\" '{print \$2}'|awk -F \" \" '{print \$1}')
-resp=\$(curl -m 5 -s --write-out %{http_code} --output /dev/null --socks4-hostname 192.168.1.1:8888 http://ping.eu)
-route18=\$(route | grep 8.8.8.8 | head -n1 | awk '{print \$1}')
-if [[ -z \$route18 ]]; then
-route del 8.8.8.8 gw \$route18 metric 4
-route del 8.8.4.4 gw \$route18 metric 4
-route del \$host gw \$route18 metric 4
-ip link delete tun1
-fi
- if [ \$resp != \"301\" ]; then
-data2=\$(ifconfig \$iface|grep \"bytes\"|awk -F \".\" '{print \$2}'|awk -F \" \" '{print \$1}')
-if [ \$data1 == \$data2 ]; then
-outp=\$(iptables -w -t nat -L OUTPUT --line-number -n|grep REDSOCKS|awk -F \" \" '{print \$1}')
-[[ -z \$outp ]] || { iptables -w -t nat -F OUTPUT; }
- while true; do
-lines=\$(iptables -w -t nat -L PREROUTING --line-number -n|grep tcp|awk \"NR==1\"|awk -F \" \" '{print \$1}')
-[[ -z \$lines ]] || { iptables -w -t nat -D PREROUTING \$lines;continue; } && { break; }
- done
-killall -q sshpass redsocks;echo -n -e \"\e[31;1mSSH DISSCONNECT!\e[0m [\$n]\";let h=\$h+1
-modes=\$(cat \$cdir/assh/profile.txt|awk \"NR==1\"|awk -F \"'\" '{print \$2}')
-if [ \$modes -eq 2 ]; then
-screen -d -m sshpass -p \$pass ssh -oStrictHostKeyChecking=no -CND :8888 -p 443 \$user@\$host -o \"Proxycommand=ncat --proxy-type http --proxy 127.0.0.1:3339 %h %p\"
-elif [ \$modes -eq 1 ]; then
-screen -d -m sshpass -p \$pass ssh -oStrictHostKeyChecking=no -CND :8888 -p \$port \$user@\$host -o \"Proxycommand=ncat --proxy-type http --proxy 127.0.0.1:3339 %h %p\"
-fi
-sleep 4
-iptables -t nat -D PREROUTING -p tcp -j REDSOCKS_FILTER 2>/dev/null
-iptables -t nat -D OUTPUT -p tcp -j REDSOCKS_FILTER 2>/dev/null
-iptables -t nat -F REDSOCKS_FILTER 2>/dev/null
-iptables -t nat -X REDSOCKS_FILTER 2>/dev/null
-iptables -t nat -F REDSOCKS 2>/dev/null
-iptables -t nat -X REDSOCKS 2>/dev/null
-iptables -t nat -N REDSOCKS
-iptables -t nat -N REDSOCKS_FILTER
-iptables -t nat -I REDSOCKS_FILTER -o lo -j RETURN
-iptables -t nat -A REDSOCKS_FILTER -d 0.0.0.0/8 -j RETURN
-iptables -t nat -A REDSOCKS_FILTER -d 10.0.0.0/8 -j RETURN
-iptables -t nat -A REDSOCKS_FILTER -d 127.0.0.0/8 -j RETURN
-iptables -t nat -A REDSOCKS_FILTER -d 169.254.0.0/16 -j RETURN
-iptables -t nat -A REDSOCKS_FILTER -d 172.16.0.0/12 -j RETURN
-iptables -t nat -A REDSOCKS_FILTER -d 192.168.0.0/16 -j RETURN
-iptables -t nat -A REDSOCKS_FILTER -d 224.0.0.0/4 -j RETURN
-iptables -t nat -A REDSOCKS_FILTER -d 240.0.0.0/4 -j RETURN
-iptables -t nat -A REDSOCKS_FILTER -d \$host -j RETURN 
-iptables -t nat -A REDSOCKS_FILTER -j REDSOCKS
-iptables -t nat -A REDSOCKS -p tcp -j REDIRECT --to-port 8889
-iptables -t nat -A OUTPUT -p tcp -j REDSOCKS_FILTER
-iptables -t nat -A PREROUTING -p tcp -j REDSOCKS_FILTER
-fi
-else echo -n -e \"\e[32;1mSSH CONNECTED..!\e[0m [\$n]\";h=1
- fi
-r=\$(ps -w|grep redsocks -o -c)
-if [[ ! \$r == "2" ]]; then
-killall -q redsocks
-redsocks
-fi
-sleep 3
-ip tuntap add dev tun1 mode tun
-ifconfig tun1 10.0.0.1 netmask 255.255.255.0
-screen -d -m -L badvpn-tun2socks --tundev tun1 --netif-ipaddr 10.0.0.2 --netif-netmask 255.255.255.0 --socks-server-addr 127.0.0.1:8888 --udpgw-remote-server-addr 127.0.0.1:$udpgw --udpgw-connection-buffer-size 1024
-route add 8.8.8.8 gw $route metric 4
-route add 8.8.4.4 gw $route metric 4
-route add $prip gw $route metric 4
-route add default gw 10.0.0.2 metric 6
-let n=\$n+1;echo -en \"\\b\\b\\b\\b\\b\\b\\b\\b\\b\\b\\b\\b\\b\\b\\b\\b\\b\\b\\b\\b\\b\\b\\b\\b\\b\\b\\b\\b\\b\\b\\b\\b\\b\\b\"
- done" > /tmp/bot.sh
-######################################################################################################################
-chmod +x /tmp/bot.sh;cd /tmp;screen -d -m ./bot.sh
-time=$(date|awk -F ' ' '{print $4}');echo -e "\e[36;1m($time)\e[0m \e[34;1mAuto reconnect Telah diaktifkan!\e[0m"
-else
-time=$(date|awk -F ' ' '{print $4}');echo -e "\e[36;1m($time)\e[0m \e[31;1mAuto reconnect Tidak diaktifkan!\e[0m"
- fi 
 sleep 4
  time=$(date|awk -F ' ' '{print $4}');echo -e " \e[36;1m($time)\e[0m \e[32;1mJalankan Auto Booting Otomatis? [y/N]\e[0m"
 sleep 2
@@ -848,15 +712,7 @@ echo -e " \e[32;1m##\e[0m               \e[35;1mXDERM SSH Auto Stopper\e[0m     
 echo -e " \e[32;1m#######################################################\e[0m"
 dns1=$(cat /tmp/resolv.conf.auto|grep name|awk "NR==1"|awk -F " " '{print $2}')
 dns2=$(cat /tmp/resolv.conf.auto|grep name|awk "NR==2"|awk -F " " '{print $2}')
-killall -q redsocks dnsmasq sshpass bot.sh screen;/etc/init.d/dnsmasq start > /dev/null 2>&1
-outp=$(iptables -w -t nat -L OUTPUT --line-number -n|grep REDSOCKS|awk -F " " '{print $1}')
-[[ -z $outp ]] || { iptables -w -t nat -F OUTPUT; }
- while true; do
-lines=$(iptables -w -t nat -L PREROUTING --line-number -n|grep tcp|awk "NR==1"|awk -F " " '{print $1}')
-[[ -z $lines ]] || { iptables -w -t nat -D PREROUTING $lines;continue; } && { break; }
- done
-
-
+killall -q dnsmasq sshpass screen;/etc/init.d/dnsmasq start > /dev/null 2>&1
 
 ips=$(ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | grep -v '192.168.1.1' | cut -d: -f2 | awk '{ print $1}' | head -c 9)
  if [[ "$ips" == "192.168.2" ]]; then
