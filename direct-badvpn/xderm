@@ -607,10 +607,10 @@ n=1;ulang=1
 time=$(date|awk -F ' ' '{print $4}');echo -n -e " \e[36;1m($time)\e[0m \e[32;1mMenjalankan SSH...\e[0m \e[33;1m($n)\e[0m"
 rm -rf /tmp/sshlog.txt;curl -s --trace /tmp/sshlog.txt 192.168.1.1:8888 > /dev/null
 log=$(grep Info /tmp/sshlog.txt|awk -F':' '{print $2}'|awk -F' ' '{print $1}');pus=$(echo $n|wc -c)
- if [ $pus -eq 1 ]; then
+ if [ $pus -eq 2 ]; then
 echo -en "\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b"
  fi
-  if [ $pus -eq 2 ]; then
+  if [ $pus -eq 3 ]; then
 echo -en "\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b"
   fi
  if [ "$log" != "Failed" ]; then
@@ -622,7 +622,7 @@ echo -e " \e[36;1m($time)\e[0m \e[32;1mIngin Mengulang Koneksi ? [y/N] \e[0m"
 time=$(date|awk -F ' ' '{print $4}');read -t 8 -n 1 -s -p " ($time) " n;echo -en "\b\b\b\b\b\b\b\b\b\b\b\b";
  [[ ! -z $n ]] || { n=y; }
 if [ "$n" == "y" ]; then
-rm -f screenlog.0;killall -q redsocks sshpass dnsmasq;n=0;ulang=1
+rm -f screenlog.0;killall -q sshpass dnsmasq;n=0;ulang=1
 modes=$(cat /usr/bin/assh/profile.txt|awk "NR==1"|awk -F "'" '{print $2}')
 if [ $modes -eq 2 ]; then
 screen -d -m sshpass -p $pass ssh -oStrictHostKeyChecking=no -CND :8888 -p 443 $user@$host -o "Proxycommand=ncat --proxy-type http --proxy 127.0.0.1:3339 %h %p"
