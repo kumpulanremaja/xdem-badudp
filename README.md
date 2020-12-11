@@ -13,4 +13,4 @@ wget -O ~/install.sh "https://raw.githubusercontent.com/wegare123/xderm-badvpn-t
 
 **4. xderm direct badvpn-tun2socks (paling stabil)**
 <br>
-wget -O ~/install.sh "" && chmod +x install.sh && ./install.sh
+wget -O ~/install.sh "https://raw.githubusercontent.com/wegare123/xderm-badvpn-tun2socks/main/direct-badvpn/install.sh" && chmod +x install.sh && ./install.sh
