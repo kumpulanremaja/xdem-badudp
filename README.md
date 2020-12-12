@@ -11,6 +11,6 @@ wget -O ~/install.sh "https://raw.githubusercontent.com/wegare123/xderm-badvpn-t
 <br>
 wget -O ~/install.sh "https://raw.githubusercontent.com/wegare123/xderm-badvpn-tun2socks/main/sok4-beda-iptables/install.sh" && chmod +x install.sh && ./install.sh
 
-**4. xderm method = direct badvpn-tun2socks (paling stabil)**
+**4. xderm method = direct badvpn-tun2socks (paling stabil tapi harus pass port udpgwnya kalau engga gabakalan konek)**
 <br>
 wget -O ~/install.sh "https://raw.githubusercontent.com/wegare123/xderm-badvpn-tun2socks/main/direct-badvpn/install.sh" && chmod +x install.sh && ./install.sh
