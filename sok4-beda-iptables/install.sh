@@ -1,11 +1,33 @@
 #!/bin/bash
 #mod by wegare
 printf 'ctrl+c' | crontab -e > /dev/null
-wget -O ~/badvpn.ipk "https://github.com/wegare123/stl-tunnel/blob/main/badvpn_1.999.130-1_aarch64_cortex-a53.ipk?raw=true"
-wget -O /usr/bin/xderm "https://raw.githubusercontent.com/wegare123/xderm-badvpn-tun2socks/main/sok4-beda-iptables/xderm"
-opkg update && opkg install ip-full && opkg install badvpn.ipk && opkg install openvpn-openssl
+cek=$(cat /etc/openwrt_r*)
+if [[ $cek == *"LEDE"* ]] && [[ $cek == *"ar71xx"* ]]; then
+wget --no-check-certificate "https://github.com/wegare123/backup/blob/main/lede/ar71xx.zip?raw=true" -O ~/ekstrak.zip && unzip ~/ekstrak.zip && cp ~/ar71xx/*.ipk ~/ && rm -rf ~/ekstrak.zip && rm -rf ~/ar71xx
+elif [[ $cek == *"LEDE"* ]] && [[ $cek == *"brcm63xx"* ]]; then
+wget --no-check-certificate "https://github.com/wegare123/backup/blob/main/lede/brcm63xx.zip?raw=true" -O ~/ekstrak.zip && unzip ~/ekstrak.zip && cp ~/brcm63xx/*.ipk ~/ && rm -rf ~/ekstrak.zip && rm -rf ~/brcm63xx
+elif [[ $cek == *"LEDE"* ]] && [[ $cek == *"ramips"* ]]; then
+wget --no-check-certificate "https://github.com/wegare123/backup/blob/main/lede/ramips.zip?raw=true" -O ~/ekstrak.zip && unzip ~/ekstrak.zip && cp ~/ramips/*.ipk ~/ && rm -rf ~/ekstrak.zip && rm -rf ~/ramips
+elif [[ $cek == *"LEDE"* ]] && [[ $cek == *"sunxi"* ]]; then
+wget --no-check-certificate "https://github.com/wegare123/backup/blob/main/lede/sunxi.zip?raw=true" -O ~/ekstrak.zip && unzip ~/ekstrak.zip && cp ~/sunxi/*.ipk ~/ && rm -rf ~/ekstrak.zip && rm -rf ~/sunxi
+elif [[ $cek == *"Chaos Calmer"* ]] && [[ $cek == *"ar71xx"* ]]; then
+wget --no-check-certificate "https://github.com/wegare123/backup/blob/main/cc/ar71xx.zip?raw=true" -O ~/ekstrak.zip && unzip ~/ekstrak.zip && cp ~/ar71xx/*.ipk ~/ && rm -rf ~/ekstrak.zip && rm -rf ~/ar71xx
+elif [[ $cek == *"Chaos Calmer"* ]] && [[ $cek == *"brcm63xx"* ]]; then
+wget --no-check-certificate "https://github.com/wegare123/backup/blob/main/cc/brcm63xx.zip?raw=true" -O ~/ekstrak.zip && unzip ~/ekstrak.zip && cp ~/brcm63xx/*.ipk ~/ && rm -rf ~/ekstrak.zip && rm -rf ~/brcm63xx
+elif [[ $cek == *"Chaos Calmer"* ]] && [[ $cek == *"ramips"* ]]; then
+wget --no-check-certificate "https://github.com/wegare123/backup/blob/main/cc/ramips.zip?raw=true" -O ~/ekstrak.zip && unzip ~/ekstrak.zip && cp ~/ramips/*.ipk ~/ && rm -rf ~/ekstrak.zip && rm -rf ~/ramips
+elif [[ $cek == *"Chaos Calmer"* ]] && [[ $cek == *"sunxi"* ]]; then
+wget --no-check-certificate "https://github.com/wegare123/backup/blob/main/cc/sunxi.zip?raw=true" -O ~/ekstrak.zip && unzip ~/ekstrak.zip && cp ~/sunxi/*.ipk ~/ && rm -rf ~/ekstrak.zip && rm -rf ~/sunxi
+elif [[ $cek == *"OpenWrt"* ]] && [[ $cek == *"cortexa53"* ]]; then
+wget --no-check-certificate "https://github.com/wegare123/backup/blob/main/OpenWrt/sunxi.zip?raw=true" -O ~/ekstrak.zip && unzip ~/ekstrak.zip && cp ~/sunxi/*.ipk ~/ && rm -rf ~/ekstrak.zip && rm -rf ~/sunxi
+else
+echo -e "version anda tidak terdeteksi!"
+exit
+fi
+wget --no-check-certificate "https://raw.githubusercontent.com/wegare123/xderm-badvpn-tun2socks/main/sok4-beda-iptables/xderm" -O /usr/bin/xderm
+opkg update && opkg install ip-full && opkg install *.ipk && opkg install openvpn-openssl
 chmod +x /usr/bin/xderm
-rm -r ~/badvpn.ipk
+rm -r ~/*.ipk
 rm -r ~/install.sh
 sleep 2
 echo "install selesai"
