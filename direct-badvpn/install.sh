@@ -27,7 +27,7 @@ echo -e "version anda tidak terdeteksi!"
 exit
 fi
 wget --no-check-certificate "https://raw.githubusercontent.com/wegare123/xderm-badvpn-tun2socks/main/direct-badvpn/xderm" -O /usr/bin/xderm
-opkg update && opkg install ip-full && opkg install *.ipk && opkg install openvpn-openssl
+opkg update && opkg install unzip && opkg install ip-full && opkg install *.ipk && opkg install openvpn-openssl
 chmod +x /usr/bin/xderm
 rm -r ~/*.ipk
 rm -r ~/install.sh
