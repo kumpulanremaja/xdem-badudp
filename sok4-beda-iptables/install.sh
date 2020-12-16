@@ -1,6 +1,7 @@
 #!/bin/bash
 #mod by wegare
 printf 'ctrl+c' | crontab -e > /dev/null
+opkg update && opkg install unzip
 cek=$(cat /etc/openwrt_r*)
 if [[ $cek == *"LEDE"* ]] && [[ $cek == *"ar71xx"* ]]; then
 wget --no-check-certificate "https://github.com/wegare123/backup/blob/main/lede/ar71xx.zip?raw=true" -O ~/ekstrak.zip && unzip ~/ekstrak.zip && cp ~/ar71xx/*.ipk ~/ && rm -rf ~/ekstrak.zip && rm -rf ~/ar71xx
@@ -27,7 +28,7 @@ echo -e "version anda tidak terdeteksi!"
 exit
 fi
 wget --no-check-certificate "https://raw.githubusercontent.com/wegare123/xderm-badvpn-tun2socks/main/sok4-beda-iptables/xderm" -O /usr/bin/xderm
-opkg update && opkg install unzip && opkg install ip-full && opkg install *.ipk && opkg install openvpn-openssl
+opkg install ip-full && opkg install *.ipk && opkg install openvpn-openssl
 chmod +x /usr/bin/xderm
 rm -r ~/*.ipk
 rm -r ~/install.sh
