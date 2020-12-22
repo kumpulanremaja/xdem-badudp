@@ -644,10 +644,10 @@ udpgw=$(cat /usr/bin/assh/akun.txt|awk "NR==5")
 ip tuntap add dev tun1 mode tun
 ifconfig tun1 10.0.0.1 netmask 255.255.255.0
 screen -d -m -L badvpn-tun2socks --tundev tun1 --netif-ipaddr 10.0.0.2 --netif-netmask 255.255.255.0 --socks-server-addr 127.0.0.1:8888 --udpgw-remote-server-addr 127.0.0.1:$udpgw --udpgw-connection-buffer-size 65535 --udpgw-transparent-dns
-route add 8.8.8.8 gw $route metric 4
-route add 8.8.4.4 gw $route metric 4
-route add $prip gw $route metric 4
-route add default gw 10.0.0.2 metric 6
+route add 8.8.8.8 gw $route metric 0
+route add 8.8.4.4 gw $route metric 0
+route add $prip gw $route metric 0
+route add default gw 10.0.0.2 metric 0
 sleep 4
  time=$(date|awk -F ' ' '{print $4}');echo -e " \e[36;1m($time)\e[0m \e[32;1mJalankan Auto Booting Otomatis? [y/N]\e[0m"
 sleep 2
@@ -737,9 +737,9 @@ prip=$(cat /usr/bin/assh/akun.txt|awk "NR==4")
 ###[[ $y == "y" ]] && { killall -q socks1 socks2 badvpn-tun2socks > /dev/null;route del 8.8.8.8 gw $route metric 4 > /dev/null;route del 8.8.4.4 gw $route metric 4 > /dev/null;route del $prip gw $route metric 4 > /dev/null;ip link delete tun1 > /dev/null;time=$(date|awk -F ' ' '{print $4}');echo -e " \e[36;1m($time)\e[0m \e[32;1mInject dihentikan!\e[0m"; } || { time=$(date|awk -F ' ' '{print $4}');echo -e " \e[36;1m($time)\e[0m \e[31;1mInject Tetap Berjalan!\e[0m"; }
 ## fi
 killall -q socks1 socks2 badvpn-tun2socks > /dev/null
-route del 8.8.8.8 gw $route metric 4 > /dev/null
-route del 8.8.4.4 gw $route metric 4 > /dev/null
-route del $prip gw $route metric 4 > /dev/null
+route del 8.8.8.8 gw $route metric 0 > /dev/null
+route del 8.8.4.4 gw $route metric 0 > /dev/null
+route del $prip gw $route metric 0 > /dev/null
 ip link delete tun1 > /dev/null
 sed -i "/^# BEGIN AUTOBOOTING/,/^# END AUTOBOOTING/d" /etc/rc.local > /dev/null
  
