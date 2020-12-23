@@ -22,9 +22,9 @@ cekcurl=$(ls /usr/bin/|grep curl);
 cektimeout=$(ls /usr/bin|grep timeout);
 cekprofile=$(ls /usr/bin/assh|grep profile.txt);
 cekssh=$(ls /usr/bin/assh|grep akun.txt);
+cekbadvpn=$(ls /usr/bin/assh|grep badvpn);
 
-
-if [[ -z $cekredsocks ]] || [[ -z $cektimeout ]] || [[ -z $cekopenssl ]] || [[ -z $cekcurl ]] || [[ -z $cekncat ]] || [[ -z $cekscreen ]] || [[ -z $ceksshpass ]]; then
+if [[ -z $cekcurl ]]; then
 clear
 echo -e " \e[32;1m#######################################################\e[0m"
 echo -e " \e[32;1m##\e[0m          \e[35;1mMemperbarui Perlengkapan XDERM\e[0m           \e[32;1m##\e[0m"
@@ -81,8 +81,6 @@ opkg update && opkg install kmod-ipv6 ip6tables radvd ip 6to4
 fi
 echo -e " \e[36;1mProcess COMPLETE 100%\e[0m"
 sleep 2
-echo -e " \e[36;1mRouter Rebooting...\e[0m"
-reboot
 else
 echo -e " \e[31;3m############## UPDATE TELAH DIBATALKAN! ###############\e[0m"
 fi
