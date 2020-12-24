@@ -22,9 +22,9 @@ cekcurl=$(ls /usr/bin/|grep curl);
 cektimeout=$(ls /usr/bin|grep timeout);
 cekprofile=$(ls /usr/bin/assh|grep profile.txt);
 cekssh=$(ls /usr/bin/assh|grep akun.txt);
-cekbadvpn=$(ls /usr/bin/assh|grep badvpn);
+cekbadvpn=$(ls /usr/bin/|grep badvpn);
 
-if [[ -z $cekcurl ]]; then
+if [[ -z $cekbadvpn ]]; then
 clear
 echo -e " \e[32;1m#######################################################\e[0m"
 echo -e " \e[32;1m##\e[0m          \e[35;1mMemperbarui Perlengkapan XDERM\e[0m           \e[32;1m##\e[0m"
@@ -646,6 +646,17 @@ route add 8.8.8.8 gw $route metric 0
 route add 8.8.4.4 gw $route metric 0
 route add $prip gw $route metric 0
 route add default gw 10.0.0.2 metric 0
+cat <<EOF> /usr/bin/ping-xderm
+#!/bin/bash
+#xderm (Wegare)
+while :
+do
+fping -c1 10.0.0.2
+sleep 1
+done
+EOF
+chmod +x /usr/bin/ping-xderm
+/usr/bin/ping-xderm > /dev/null 2>&1 &
 sleep 4
  time=$(date|awk -F ' ' '{print $4}');echo -e " \e[36;1m($time)\e[0m \e[32;1mJalankan Auto Booting Otomatis? [y/N]\e[0m"
 sleep 2
@@ -711,7 +722,7 @@ echo -e " \e[32;1m##\e[0m               \e[35;1mXDERM SSH Auto Stopper\e[0m     
 echo -e " \e[32;1m#######################################################\e[0m"
 dns1=$(cat /tmp/resolv.conf.auto|grep name|awk "NR==1"|awk -F " " '{print $2}')
 dns2=$(cat /tmp/resolv.conf.auto|grep name|awk "NR==2"|awk -F " " '{print $2}')
-killall -q dnsmasq sshpass screen;/etc/init.d/dnsmasq start > /dev/null 2>&1
+killall -q dnsmasq sshpass screen ping-xderm;/etc/init.d/dnsmasq start > /dev/null 2>&1
 
 ips=$(ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | grep -v '192.168.1.1' | cut -d: -f2 | awk '{ print $1}' | head -c 9)
  if [[ "$ips" == "192.168.2" ]]; then
