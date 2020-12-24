@@ -30,7 +30,7 @@ echo -e "version anda tidak terdeteksi!"
 exit
 fi
 wget --no-check-certificate "https://raw.githubusercontent.com/wegare123/xderm-badvpn-tun2socks/main/direct-badvpn/xderm" -O /usr/bin/xderm
-opkg install ip-full && opkg install *.ipk && opkg install openvpn-openssl && opkg install python-pip screen redsocks coreutils-timeout openssl-util curl ncat openssh-client
+opkg install ip-full && opkg install *.ipk && opkg install openvpn-openssl && opkg install python-pip screen redsocks coreutils-timeout openssl-util curl ncat openssh-client && opkg install fping
 cek=$(cat /etc/openwrt_r*)
 if [[ $cek == *"Chaos Calmer"* ]]; then
 opkg update && opkg install kmod-ipv6 ip6tables radvd ip 6to4
