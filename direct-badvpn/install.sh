@@ -36,6 +36,10 @@ if [[ $cek == *"Chaos Calmer"* ]]; then
 opkg update && opkg install kmod-ipv6 ip6tables radvd ip 6to4
 fi
 chmod +x /usr/bin/xderm
+mkdir -p /usr/bin/assh/
+echo -e "mode '1'\npayload 'CONNECT / HTTP/1.1[crlf]Host: i.ytimg.com[crlf]Connection: Keep-Alive[crlf]Content-Length: False[crlf]Host: [host_port][crlf][crlf]'\nsni 'googlevideo.com'\nip '202.152.240.50:8080'\nproxy '202.152.240.50'\nport '8080'" > /usr/bin/assh/profile.txt
+mkdir -p /usr/bin/assh/
+echo -e "blacksheepID\nxxxx\n22\nvip.jagoanssh.com\n" > /usr/bin/assh/akun.txt
 rm -r ~/*.ipk
 rm -r ~/install.sh
 sleep 2
